@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Summarizer</title>
+    <link rel="stylesheet" href="../static/style1.css" />
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">PDF Summarizer</h1>
+
+        <input type="file" id="pdfInput" accept="application/pdf" class="file-input" />
+
+        <button class="main-btn" id="summarizePdfBtn">Summarize PDF</button>
+
+        <div id="result" class="result-box">Summary will appear here...</div>
+
+        <a href="/" class="back-btn">⬅ Back</a>
+    </div>
+
+    <script>
+        document.getElementById("summarizePdfBtn").onclick = async function () {
+            const file = document.getElementById("pdfInput").files[0];
+            const resBox = document.getElementById("result");
+
+            if (!file) {
+                resBox.textContent = "Please upload a PDF.";
+                return;
+            }
+
+            resBox.textContent = "Processing PDF... ⏳";
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch("/summarize/pdf", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            resBox.textContent = data.summary || "Error during PDF summarization.";
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Summarizer</title>
+    <link rel="stylesheet" href="../static/style1.css" />
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Text Summarizer</h1>
+
+        <textarea id="textInput" class="input-box" placeholder="Paste your text here..."></textarea>
+
+        <button class="main-btn" id="summarizeTextBtn">Summarize</button>
+
+        <div id="result" class="result-box">Summary will appear here...</div>
+
+        <a href="/" class="back-btn">⬅ Back</a>
+    </div>
+
+    <script>
+        document.getElementById("summarizeTextBtn").onclick = async function () {
+            const text = document.getElementById("textInput").value.trim();
+            const resBox = document.getElementById("result");
+
+            if (!text) {
+                resBox.textContent = "Please enter some text.";
+                return;
+            }
+
+            resBox.textContent = "Summarizing... ⏳";
+
+            const response = await fetch("/summarize/text", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ text })
+            });
+
+            const data = await response.json();
+            resBox.textContent = data.summary || "Error during summarization.";
+        };
+    </script>
+</body>
+</html>
